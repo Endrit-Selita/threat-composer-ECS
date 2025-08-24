@@ -21,7 +21,6 @@ terraform {
   }
 }
 
-
 # Create a VPC
 resource "aws_vpc" "TC_VPN" {
   cidr_block = "10.0.0.0/16"

@@ -1,0 +1,11 @@
+# Environment and credential files
+*.env
+*.key
+*.pem
+secret-*.json
+
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfvars
+crash.log
