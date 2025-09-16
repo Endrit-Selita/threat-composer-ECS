@@ -12,6 +12,17 @@ provider "aws" {
   region = "eu-west-2"
 }
 
+# S3 Bucket
+terraform {
+  backend "s3" {
+    bucket = "mys3bucket"
+    key    = "terraform.tfstate"
+    region = "eu-west-2"
+    encrypt      = true  
+    use_lockfile = true
+  }
+}
+
 # Create Route 53
 resource "aws_route53_record" "www" {
   zone_id = aws_route53_zone.primary.zone_id
@@ -19,8 +30,8 @@ resource "aws_route53_record" "www" {
   type    = "A"
 
   alias {
-    name                   = ###aws_lb.main.dns_name
-    zone_id                = ###aws_lb.main.zone_id
+    name                   = aws_lb.alb-ecs.dns_name
+    zone_id                = aws_lb.alb-ecs.zone_id
     evaluate_target_health = true
   }
 }
@@ -30,6 +41,7 @@ resource "aws_vpc" "vpc-ecs" {
   cidr_block = "10.10.0.0/16"
 }
 
+# Interet Gateway
 resource "aws_internet_gateway" "i-gateway" {
   vpc_id = aws_vpc.vpc-ecs.id
 
@@ -38,41 +50,46 @@ resource "aws_internet_gateway" "i-gateway" {
   }
 }
 
-# availability Zone 1
-data "aws_availability_zones" "az1" {
+# availability Zone 
+data "aws_availability_zones" "az" {
   state = "available"
 }
 
 # public subnet 1
 resource "aws_subnet" "public1" {
-  cidr_block              = "10.11.0.0/24"
+  cidr_block              = "10.11.0.0/16"
   vpc_id                  = aws_vpc.vpc-ecs.id
   map_public_ip_on_launch = true
-  availability_zone = data.aws_availability_zones.available.names[0]
+  availability_zone = data.aws_availability_zones.az.names[0]
+}
+
+ # Elastic IP for Nat gateway in public subnet 1
+resource "aws_eip" "eip1" {
+  domain   = "vpc"
 }
 
 # NAT gateway - public subnet 1
 resource "aws_nat_gateway" "nat-gw1" {
-  allocation_id = aws_eip.nat.id
+  allocation_id = aws_eip.eip1.id
   subnet_id     = aws_subnet.public1.id
-}
-
-# availability Zone 2
-data "aws_availability_zones" "az2" {
-  state = "available"
 }
 
 # Public subnet 2
 resource "aws_subnet" "public2" {
-  cidr_block              = "10.12.0.0/24"
+  cidr_block              = "10.12.0.0/16"
   vpc_id                  = aws_vpc.vpc-ecs.id
   map_public_ip_on_launch = true
-  availability_zone = data.aws_availability_zones.available.names[1]
+  availability_zone = data.aws_availability_zones.az.names[1]
+}
+
+ # Elastic IP for Nat gateway in public subnet 2
+resource "aws_eip" "eip2" {
+  domain   = "vpc"
 }
 
 # NAT gateway - public subnet 2
 resource "aws_nat_gateway" "nat-gw2" {
-  allocation_id = aws_eip.nat.id
+  allocation_id = aws_eip.eip2.id
   subnet_id     = aws_subnet.public2.id
 }
 
@@ -81,25 +98,158 @@ resource "aws_lb" "alb-ecs" {
   name               = "alb-ecs"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [aws_security_group.lb_sg.id]
+  security_groups    = [aws_security_group.lb_sg.id] # need to make an ALB SG
   subnets            = [ 
     aws_subnet.public1.id,
-    aws_subnet.public2.id,
-]
+    aws_subnet.public2.id]
 
   enable_deletion_protection = true
+}
 
-  access_logs {
-    bucket  = ###aws_s3_bucket.lb_logs.id
-    prefix  = "test-lb"
-    enabled = true
+resource "aws_lb_target_group" "alb_targetgroup" {
+  name        = "alb_targetgroup"
+  port        = 80
+  protocol    = "HTTP"
+  target_type = "ip"
+  vpc_id      = aws_vpc.vpc-ecs.id
+
+health_check {
+  enabled = true
+  interval = 30
+  path = "/"
+  port = "traffic-port"
+  protocol = "HTTP"
+  timeout = 5
+  healthy_threshold = 3
+  unhealthy_threshold = 3
+  matcher = "200-299"
+}
+}
+
+resource "aws_lb_listener" "HTTPS_l" {
+  load_balancer_arn = aws_lb.alb-ecs.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.alb_targetgroup.arn
   }
 }
 
-# private subnet 1
-resource "aws_subnet" "private1" {
-  cidr_block              = "10.13.0.0/24"
-  vpc_id                  = aws_vpc.vpc-ecs.id
-  map_public_ip_on_launch = "false"
+resource "aws_acm_certificate" "acm_cert" {
+  domain_name       = "normanbrown.co.uk/"
+  validation_method = "DNS"
 }
 
+# private subnet 1 in AZ1
+resource "aws_subnet" "private1" {
+  cidr_block              = "10.13.0.0/16"
+  vpc_id                  = aws_vpc.vpc-ecs.id
+  map_public_ip_on_launch = false
+  availability_zone = data.aws_availability_zones.az.names[0]
+}
+
+# private subnet 2 in AZ2
+resource "aws_subnet" "private2" {
+  cidr_block              = "10.14.0.0/16"
+  vpc_id                  = aws_vpc.vpc-ecs.id
+  map_public_ip_on_launch = false
+  availability_zone = data.aws_availability_zones.az.names[1]
+}
+
+# Creating ECS
+resource "aws_ecs_service" "mongo" {
+  name            = "mongodb"
+  launch_type     = "FARGATE"
+  platform_version = "LATEST"
+  cluster         = aws_ecs_cluster.ecs-c1.id
+  task_definition = aws_ecs_task_definition.mongo.arn
+  desired_count   = 2
+  iam_role        = aws_iam_role.foo.arn
+  depends_on      = [aws_iam_role_policy.foo]
+
+  ordered_placement_strategy {
+    type  = "binpack"
+    field = "cpu"
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.foo.arn
+    container_name   = "latest-container"
+    container_port   = 443
+  }
+
+  network_configuration {
+    assign_public_ip = false
+    security_groups  = 
+    subnets          = [aws_subnet.private1.id, aws_subnet.private2.id]
+  }
+}
+
+# ECS Cluster
+resource "aws_ecs_cluster" "ecs-c1" {
+  name = "esc-cluster-1"
+}
+
+#ECS Task Defenition
+resource "aws_ecs_task_definition" "ecstd" {
+  family = "service"
+  container_definitions = jsonencode([
+    {
+      name      = "first"
+      image     = "service-first"
+      cpu       = 10
+      memory    = 512
+      essential = true
+      portMappings = [
+        {
+          containerPort = 80
+          hostPort      = 80
+        }
+      ]
+    },
+    {
+      name      = "second"
+      image     = "service-second"
+      cpu       = 10
+      memory    = 256
+      essential = true
+      portMappings = [
+        {
+          containerPort = 443
+          hostPort      = 443
+        }
+      ]
+    }
+  ])
+
+  volume {
+    name      = "service-storage"
+    host_path = "/ecs/service-storage"
+  }
+
+  placement_constraints {
+    type       = "memberOf"
+    expression = "attribute:ecs.availability-zone in [us-west-2a, us-west-2b]"
+  }
+}
+
+# ECR 
+resource "aws_ecr_repository" "ecr_app" {
+  name                 = "ecr_app"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}
+
+# route table internet gateway
+resource "aws_route_table" "rt_public" {
+  vpc_id = aws_vpc.vpc-ecs.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.i-gateway.id
+  }
