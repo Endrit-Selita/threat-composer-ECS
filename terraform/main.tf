@@ -213,43 +213,44 @@ resource "aws_subnet" "private2" {
   availability_zone = data.aws_availability_zones.az.names[1]
 }
 
-# Creating ECS
-resource "aws_ecs_service" "mongo" {
-  name            = "mongodb"
-  launch_type     = "FARGATE"
-  platform_version = "LATEST"
-  cluster         = aws_ecs_cluster.ecs-c1.id
-  task_definition = aws_ecs_task_definition.mongo.arn
-  desired_count   = 2
-  iam_role        = aws_iam_role.foo.arn
-  depends_on      = [aws_iam_role_policy.foo]
+############# Creating ECS ##########################
 
-  ordered_placement_strategy {
-    type  = "binpack"
-    field = "cpu"
-  }
+# ECS Cluster
+resource "aws_ecs_cluster" "ecs_cluster" {
+  name = "ecs_cluster"
 
-  load_balancer {
-    target_group_arn = aws_lb_target_group.foo.arn
-    container_name   = "latest-container"
-    container_port   = 443
-  }
+  configuration {
+    execute_command_configuration {
+      kms_key_id = aws_kms_key.kms_key.arn
+      logging    = "OVERRIDE"
 
-  network_configuration {
-    assign_public_ip = false
-    security_groups  = 
-    subnets          = [aws_subnet.private1.id, aws_subnet.private2.id]
+      log_configuration {
+        cloud_watch_encryption_enabled = true
+        cloud_watch_log_group_name     = aws_cloudwatch_log_group.ecs_cloudwatch.name
+      }
+    }
   }
 }
 
-# ECS Cluster
-resource "aws_ecs_cluster" "ecs-c1" {
-  name = "esc-cluster-1"
+# cloud watch
+resource "aws_cloudwatch_log_group" "ecs_cloudwatch" {
+  name = "ecs_cloudwatch"
+}
+
+#KMS Keys
+resource "aws_kms_key" "kms_key" {
+  description             = "kms_key"
+  deletion_window_in_days = 7
 }
 
 #ECS Task Defenition
-resource "aws_ecs_task_definition" "ecstd" {
+resource "aws_ecs_task_definition" "service" {
   family = "service"
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  cpu                      = 1024
+  memory                   = 2048
+
   container_definitions = jsonencode([
     {
       name      = "first"
@@ -288,6 +289,47 @@ resource "aws_ecs_task_definition" "ecstd" {
     type       = "memberOf"
     expression = "attribute:ecs.availability-zone in [us-west-2a, us-west-2b]"
   }
+}
+
+resource "aws_ecs_service" "mongo" {
+  name            = "mongodb"
+  launch_type     = "FARGATE"
+  platform_version = "LATEST"
+  cluster         = aws_ecs_cluster.ecs-c1.id
+  task_definition = aws_ecs_task_definition.mongo.arn
+  desired_count   = 2
+  iam_role        = aws_iam_role.foo.arn
+  depends_on      = [aws_iam_role_policy.foo]
+
+  ordered_placement_strategy {
+    type  = "binpack"
+    field = "cpu"
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.foo.arn
+    container_name   = "latest-container"
+    container_port   = 443
+  }
+
+  network_configuration {
+    assign_public_ip = false
+    security_groups  = 
+    subnets          = [aws_subnet.private1.id, aws_subnet.private2.id]
+  }
+}
+
+
+  volume {
+    name      = "service-storage"
+    host_path = "/ecs/service-storage"
+  }
+
+  placement_constraints {
+    type       = "memberOf"
+    expression = "attribute:ecs.availability-zone in [us-west-2a, us-west-2b]"
+  }
+
 }
 
 # ECR 
