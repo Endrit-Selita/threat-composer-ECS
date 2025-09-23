@@ -186,6 +186,7 @@ resource "aws_vpc_security_group_ingress_rule" "alb_ingress_https" {
   ip_protocol = "tcp"
   to_port     = 443
 }
+
 resource "aws_vpc_security_group_egress_rule" "alb_egress" {
   security_group_id = aws_security_group.alb_sg.id
   cidr_ipv4         = "0.0.0.0/0"
@@ -243,6 +244,27 @@ resource "aws_kms_key" "kms_key" {
   deletion_window_in_days = 7
 }
 
+data "aws_iam_policy_document" "ecs_iam_pd" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ecs-tasks.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role" "ecs_iam_role" {
+  name               = "instance_role"
+  assume_role_policy = data.aws_iam_policy_document.ecs_iam_pd.json
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_exec_attach" {
+  role       = aws_iam_role.ecs_iam_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+  
 #ECS Task Defenition
 resource "aws_ecs_task_definition" "service" {
   family = "service"
@@ -250,6 +272,7 @@ resource "aws_ecs_task_definition" "service" {
   network_mode             = "awsvpc"
   cpu                      = 1024
   memory                   = 2048
+  execution_role_arn       = aws_iam_role.ecs_iam_role.arn
 
   container_definitions = jsonencode([
     {
@@ -264,72 +287,49 @@ resource "aws_ecs_task_definition" "service" {
           hostPort      = 80
         }
       ]
-    },
-    {
-      name      = "second"
-      image     = "service-second"
-      cpu       = 10
-      memory    = 256
-      essential = true
-      portMappings = [
-        {
-          containerPort = 443
-          hostPort      = 443
-        }
-      ]
-    }
-  ])
+    }, ])
 
-  volume {
-    name      = "service-storage"
-    host_path = "/ecs/service-storage"
-  }
-
-  placement_constraints {
-    type       = "memberOf"
-    expression = "attribute:ecs.availability-zone in [us-west-2a, us-west-2b]"
-  }
 }
 
-resource "aws_ecs_service" "mongo" {
-  name            = "mongodb"
+resource "aws_ecs_service" "ecs_service" {
+  name            = "ecs_service"
   launch_type     = "FARGATE"
   platform_version = "LATEST"
-  cluster         = aws_ecs_cluster.ecs-c1.id
-  task_definition = aws_ecs_task_definition.mongo.arn
+  cluster         = aws_ecs_cluster.ecs_cluster.id
+  task_definition = aws_ecs_task_definition.service.id
   desired_count   = 2
-  iam_role        = aws_iam_role.foo.arn
-  depends_on      = [aws_iam_role_policy.foo]
-
-  ordered_placement_strategy {
-    type  = "binpack"
-    field = "cpu"
-  }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.foo.arn
+    target_group_arn = aws_lb_target_group.alb_targetgroup.id
     container_name   = "latest-container"
     container_port   = 443
   }
 
   network_configuration {
-    assign_public_ip = false
-    security_groups  = 
+    assign_public_ip = true
+    security_groups = [aws_security_group.ecs_sg.id]
     subnets          = [aws_subnet.private1.id, aws_subnet.private2.id]
   }
 }
 
+resource "aws_security_group" "ecs_sg" {
+  name        = "ecs_sg"
+  description = "Allow HTTP inbound traffic from ALB"
+  vpc_id      = aws_vpc.vpc-ecs.id
+}
 
-  volume {
-    name      = "service-storage"
-    host_path = "/ecs/service-storage"
-  }
+resource "aws_vpc_security_group_ingress_rule" "ecs_http" {
+  security_group_id = aws_security_group.ecs_sg.id
+  cidr_ipv4   = "0.0.0.0/0"
+  from_port   = 80
+  ip_protocol = "tcp"
+  to_port     = 80
+}
 
-  placement_constraints {
-    type       = "memberOf"
-    expression = "attribute:ecs.availability-zone in [us-west-2a, us-west-2b]"
-  }
-
+resource "aws_vpc_security_group_egress_rule" "ecs_egress" {
+  security_group_id = aws_security_group.ecs_sg.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1" 
 }
 
 # ECR 
@@ -350,3 +350,4 @@ resource "aws_route_table" "rt_public" {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.i-gateway.id
   }
+}
