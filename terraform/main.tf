@@ -5,6 +5,14 @@ terraform {
       version = "~> 6.0"
     }
   }
+
+  backend "s3" {
+    bucket = "mys3bucket-euwest2"
+    key    = "terraform.tfstate"
+    region = "eu-west-2"
+    encrypt      = true  
+    dynamodb_table = "dynamodb_terraform_lock"
+  }
 }
 
 # Configure the AWS Provider
@@ -12,16 +20,19 @@ provider "aws" {
   region = "eu-west-2"
 }
 
-############### S3 Bucket ###############
-terraform {
-  backend "s3" {
-    bucket = "mys3bucket"
-    key    = "terraform.tfstate"
-    region = "eu-west-2"
-    encrypt      = true  
-    use_lockfile = true
-  }
+############### dynamoDB ###############
+resource "aws_dynamodb_table" "dynamodb_terraform_lock" {
+   name = "dynamodb_terraform_lock"
+   hash_key = "LockID"
+   read_capacity = 20
+   write_capacity = 20
+
+   attribute {
+      name = "LockID"
+      type = "S"
+   }
 }
+
 
 ############### Create Route 53 ###############
 resource "aws_route53_zone" "r53_zone" {
@@ -61,12 +72,12 @@ resource "aws_route53_record" "r53_cname" {
   records         = [each.value.record]
   ttl             = 60
   type            = each.value.type
-  zone_id         = data.aws_route53_zone.r53_zone.zone_id
+  zone_id         = aws_route53_zone.r53_zone.id
 }
 
 resource "aws_acm_certificate_validation" "acm_validation" {
-  certificate_arn         = "${aws_acm_certificate.cert.arn}"
-  validation_record_fqdns = ["${aws_route53_record.cert_validation.fqdn}"]
+  certificate_arn         = "${aws_acm_certificate.acm_cert.arn}"
+  validation_record_fqdns = [for record in aws_route53_record.r53_cname : record.fqdn]
 }
 
 ############### Create a VPC ###############
@@ -361,10 +372,11 @@ resource "aws_ecs_task_definition" "service" {
       essential = true
       portMappings = [
         {
-          containerPort = 80
+          containerPort = 80,
           hostPort      = 80
         }
       ]
+
     logConfiguration = {
       logDriver                 = "awslogs",
       options: {
