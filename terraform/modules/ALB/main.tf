@@ -8,7 +8,7 @@ resource "aws_lb" "alb-ecs" {
     aws_subnet.public1.id,
     aws_subnet.public2.id]
 
-  enable_deletion_protection = true
+  enable_deletion_protection = false
 }
 
 resource "aws_lb_target_group" "albtargetgroup" {
