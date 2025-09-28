@@ -24,14 +24,13 @@ terraform {
 }
 
 ############### Create Route 53 ###############
-# need to fix godaddy to make this work
 resource "aws_route53_zone" "r53_zone" {
-  name = "normanbrown.co.uk"
+  name = "tahirbajramselita.co.uk"
 }
 
-resource "aws_route53_record" "www" {
+resource "aws_route53_record" "r53_record" {
   zone_id = aws_route53_zone.r53_zone.id
-  name    = "tm.normanbrown.co.uk"
+  name    = "tm.tahirbajramselita.co.uk"
   type    = "A"
 
   alias {
@@ -44,8 +43,30 @@ resource "aws_route53_record" "www" {
 ############### ACM ###############
 
 resource "aws_acm_certificate" "acm_cert" {
-  domain_name       = "tm.normanbrown.co.uk"
+  domain_name       = "tm.tahirbajramselita.co.uk"
   validation_method = "DNS"
+}
+
+resource "aws_route53_record" "r53_cname" {
+  for_each = {
+    for dvo in aws_acm_certificate.acm_cert.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  }
+
+  allow_overwrite = true
+  name            = each.value.name
+  records         = [each.value.record]
+  ttl             = 60
+  type            = each.value.type
+  zone_id         = data.aws_route53_zone.r53_zone.zone_id
+}
+
+resource "aws_acm_certificate_validation" "acm_validation" {
+  certificate_arn         = "${aws_acm_certificate.cert.arn}"
+  validation_record_fqdns = ["${aws_route53_record.cert_validation.fqdn}"]
 }
 
 ############### Create a VPC ###############
