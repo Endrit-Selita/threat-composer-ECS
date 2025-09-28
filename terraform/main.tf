@@ -20,7 +20,7 @@ provider "aws" {
   region = "eu-west-2"
 }
 
-############### dynamoDB ###############
+############### S3 Bucket ###############
 resource "aws_s3_bucket" "mys3bucket-euwest2" {
   bucket = "mys3bucket-euwest2"
 }
