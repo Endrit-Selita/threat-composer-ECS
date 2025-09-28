@@ -17,7 +17,7 @@ resource "aws_route53_record" "r53_cname" {
   allow_overwrite = true
   name            = each.value.name
   records         = [each.value.record]
-  ttl             = 60
+  ttl             = var.ttl
   type            = each.value.type
   zone_id         = var.zone_id
 }
