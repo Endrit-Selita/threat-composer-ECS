@@ -21,6 +21,11 @@ provider "aws" {
 }
 
 ############### dynamoDB ###############
+resource "aws_s3_bucket" "mys3bucket-euwest2" {
+  bucket = "mys3bucket-euwest2"
+}
+
+############### dynamoDB ###############
 resource "aws_dynamodb_table" "dynamodb_terraform_lock" {
    name = "dynamodb_terraform_lock"
    hash_key = "LockID"
@@ -101,7 +106,7 @@ data "aws_availability_zones" "az" {
 
 # public subnet 1
 resource "aws_subnet" "public1" {
-  cidr_block              = "10.11.0.0/16"
+  cidr_block              = "10.10.1.0/24"
   vpc_id                  = aws_vpc.vpc-ecs.id
   map_public_ip_on_launch = true
   availability_zone = data.aws_availability_zones.az.names[0]
@@ -120,7 +125,7 @@ resource "aws_nat_gateway" "nat-gw1" {
 
 # Public subnet 2
 resource "aws_subnet" "public2" {
-  cidr_block              = "10.12.0.0/16"
+  cidr_block              = "10.10.2.0/24"
   vpc_id                  = aws_vpc.vpc-ecs.id
   map_public_ip_on_launch = true
   availability_zone = data.aws_availability_zones.az.names[1]
@@ -139,7 +144,7 @@ resource "aws_nat_gateway" "nat-gw2" {
 
 # private subnet 1 in AZ1
 resource "aws_subnet" "private1" {
-  cidr_block              = "10.13.0.0/16"
+  cidr_block              = "10.10.3.0/24"
   vpc_id                  = aws_vpc.vpc-ecs.id
   map_public_ip_on_launch = false
   availability_zone = data.aws_availability_zones.az.names[0]
@@ -147,7 +152,7 @@ resource "aws_subnet" "private1" {
 
 # private subnet 2 in AZ2
 resource "aws_subnet" "private2" {
-  cidr_block              = "10.14.0.0/16"
+  cidr_block              = "10.10.4.0/24"
   vpc_id                  = aws_vpc.vpc-ecs.id
   map_public_ip_on_launch = false
   availability_zone = data.aws_availability_zones.az.names[1]
@@ -221,8 +226,8 @@ resource "aws_lb" "alb-ecs" {
   enable_deletion_protection = true
 }
 
-resource "aws_lb_target_group" "alb_targetgroup" {
-  name        = "alb_targetgroup"
+resource "aws_lb_target_group" "albtargetgroup" {
+  name        = "albtargetgroup"
   port        = 80
   protocol    = "HTTP"
   target_type = "ip"
@@ -250,7 +255,7 @@ resource "aws_lb_listener" "HTTPS_l" {
   
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.alb_targetgroup.arn
+    target_group_arn = aws_lb_target_group.albtargetgroup.arn
   }
 }
 
@@ -379,7 +384,7 @@ resource "aws_ecs_task_definition" "service" {
 
     logConfiguration = {
       logDriver                 = "awslogs",
-      options: {
+      options = {
         awslogs-group           = aws_cloudwatch_log_group.ecs_cloudwatch.name,
         awslogs-region          = "eu-west-2",
         awslogs-stream-prefix   = "ecs"
@@ -398,7 +403,7 @@ resource "aws_ecs_service" "ecs_service" {
   desired_count   = 2
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.alb_targetgroup.id
+    target_group_arn = aws_lb_target_group.albtargetgroup.id
     container_name   = "tcdf"
     container_port   = 80
   }
