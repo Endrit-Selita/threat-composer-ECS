@@ -105,24 +105,22 @@ resource "aws_ecs_service" "ecs_service" {
   }
 }
  
-# carry on below this
-
 resource "aws_security_group" "ecs_sg" {
-  name        = "ecs_sg"
+  name        = var.ecs_sg_name
   description = "Allow HTTP inbound traffic from ALB"
   vpc_id      = aws_vpc.vpc-ecs.id
 
 ingress {
-      from_port   = 80
-      to_port     = 80
-      protocol    = "tcp"
+      from_port   = var.ecs_sg_ingress_from_port
+      to_port     = var.ecs_sg_ingress_to_port
+      protocol    = var.ecs_sg_ingress_protocol
       security_groups = [aws_security_group.alb_sg.id]
       }
 
 egress {
-      from_port   = 0
-      to_port     = 0
-      protocol    = "-1"
-      cidr_blocks = ["0.0.0.0/0"]
+      from_port   = var.ecs_sg_egress_from_port
+      to_port     = var.ecs_sg_egress_to_port
+      protocol    = var.ecs_sg_egress_protocol
+      cidr_blocks = [var.ecs_sg_egress_cidr_blocks]
   }
 }

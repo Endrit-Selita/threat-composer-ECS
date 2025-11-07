@@ -127,3 +127,43 @@ variable "ecs_network_configuration_subnets" {
   type = list(string)
   default = [aws_subnet.private1.id, aws_subnet.private2.id]
 }
+
+variable "ecs_sg_name" {
+  type = string
+  default = ecs_sg
+}
+
+variable "ecs_sg_ingress_from_port" {
+  type = number
+  default = 80
+}
+
+variable "ecs_sg_ingress_to_port" {
+  type = number
+  default = 80
+}
+
+variable "ecs_sg_ingress_protocol" {
+  type = string
+  default = "tcp"
+}
+
+variable "ecs_sg_egress_from_port" {
+  type = number
+  default = 0
+}
+
+variable "ecs_sg_egress_to_port" {
+  type = number
+  default = 0
+}
+
+variable "ecs_sg_egress_protocol" {
+  type = string
+  default = "-1"
+}
+
+variable "ecs_sg_egress_cidr_blocks" {
+  type = string
+  default = "0.0.0.0/0"
+}
