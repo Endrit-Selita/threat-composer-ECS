@@ -13,6 +13,10 @@ variable "alb-ecs-load_balancer_type" {
   default     = "application"
 }
 
+variable "alb-ecs_public_subnets" {
+  type = list(string)
+}
+
 variable "alb-ecs-enable_deletion_protection" {
   type        = bool
   default     = false
@@ -108,12 +112,15 @@ variable "alb_ingress_http_ip_protocol" {
   default = "tcp"
 }
 
+variable "alb_ingress_https_cidr_ipv4" {
+  type = string
+  default = "0.0.0.0/0"
+}
+
 variable "alb_ingress_http_to_port" {
   type = number
   default = 80
 }
-
-
 
 variable "alb_ingress_https_from_port" {
   type = number

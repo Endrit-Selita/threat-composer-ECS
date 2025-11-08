@@ -4,9 +4,7 @@ resource "aws_lb" "alb-ecs" {
   internal           = var.alb-ecs-internal
   load_balancer_type = var.alb-ecs-load_balancer_type
   security_groups    = [aws_security_group.alb_sg.id] 
-  subnets            = [ 
-    aws_subnet.public1.id,
-    aws_subnet.public2.id]
+  subnets            = var.alb-ecs_public_subnets
 
   enable_deletion_protection = var.alb-ecs-enable_deletion_protection
 }
