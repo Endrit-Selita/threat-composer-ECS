@@ -71,14 +71,12 @@ resource "aws_subnet" "private2" {
   availability_zone = data.aws_availability_zones.az.names[1]
 }
 
-####### carry on from here
-
 # route table internet gateway
 resource "aws_route_table" "ig_rt_public" {
   vpc_id = aws_vpc.vpc-ecs.id
 
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block = var.ig_rt_public_cidr_block
     gateway_id = aws_internet_gateway.i-gateway.id
   }
 }
@@ -100,7 +98,7 @@ resource "aws_route_table" "ng_rt_ecs_1" {
   vpc_id = aws_vpc.vpc-ecs.id
 
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block = var.ng_rt_ecs_1_cidr_block
     nat_gateway_id = aws_nat_gateway.nat-gw1.id
   }
 }
@@ -116,7 +114,7 @@ resource "aws_route_table" "ng_rt_ecs_2" {
   vpc_id = aws_vpc.vpc-ecs.id
 
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block = var.ng_rt_ecs_2_cidr_block
     nat_gateway_id = aws_nat_gateway.nat-gw2.id
   }
 }

@@ -57,3 +57,18 @@ variable "private_subnet_2_map_public_ip_on_launch" {
     type = bool
     default = false
 }
+
+variable "ig_rt_public_cidr_block" {
+    type = string
+    default = "0.0.0.0/0"
+}
+
+variable "ng_rt_ecs_1_cidr_block" {
+    type = string
+    default = "0.0.0.0/0"
+}
+
+variable "ng_rt_ecs_2_cidr_block" {
+    type = string
+    default = "0.0.0.0/0"
+}
