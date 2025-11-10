@@ -14,7 +14,7 @@ resource "aws_lb_target_group" "albtargetgroup" {
   port        = var.aws_lb_target_group_port
   protocol    = var.aws_lb_target_group_protocol
   target_type = var.aws_lb_target_group_target_type
-  vpc_id      = aws_vpc.vpc-ecs.id
+  vpc_id      = var.albtargetgroup_vpc_id
 
 health_check {
   enabled = var.health_check_enabled
@@ -61,7 +61,7 @@ resource "aws_lb_listener" "HTTP_1" {
 resource "aws_security_group" "alb_sg" {
   name        = var.aws_security_group_name
   description = "ALB Security Group"
-  vpc_id      = aws_vpc.vpc-ecs.id
+  vpc_id      = var.albtargetgroup_vpc_id
   tags = {
     Name = "alb_sg"
   }

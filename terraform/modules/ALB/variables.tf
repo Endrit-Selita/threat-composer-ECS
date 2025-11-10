@@ -146,3 +146,7 @@ variable "alb_egress_ip_protocol" {
   type = string
   default = "-1" 
 }
+
+variable "albtargetgroup_vpc_id" {
+  type = string
+}

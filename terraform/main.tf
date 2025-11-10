@@ -13,8 +13,9 @@ module "ALB" {
 alb-ecs-name = var.alb-ecs-name
 alb-ecs-internal = var.alb-ecs-internal
 alb-ecs-load_balancer_type = var.alb-ecs-load_balancer_type # this refernces the public_subnets output from the vpc module
-alb-ecs_public_subnets = module.vpc.public_subnets.id
+alb-ecs_public_subnets = module.vpc.public_subnets_id
 alb-ecs-enable_deletion_protection = var.alb-ecs-enable_deletion_protection
+albtargetgroup_vpc_id = module.vpc.vpc-ecs_id
 aws_lb_target_group_name = var.aws_lb_target_group_name
 aws_lb_target_group_port = var.aws_lb_target_group_port
 aws_lb_target_group_protocol = var.aws_lb_target_group_protocol
