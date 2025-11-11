@@ -30,11 +30,11 @@ health_check {
 }
 
 resource "aws_lb_listener" "HTTPS_l" {
-  load_balancer_arn = aws_lb.alb-ecs.arn
+  load_balancer_arn = var.acm_certificate_arn
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = var.HTTPS_l_ssl_policy
-  certificate_arn   = aws_acm_certificate.acm_cert.arn
+  certificate_arn   = var.acm_certificate_arn
   
   default_action {
     type             = "forward"
@@ -43,7 +43,7 @@ resource "aws_lb_listener" "HTTPS_l" {
 }
 
 resource "aws_lb_listener" "HTTP_1" {
-  load_balancer_arn = aws_lb.alb-ecs.arn
+  load_balancer_arn = var.acm_certificate_arn
   port              = "80"
   protocol          = "HTTP"
 

@@ -150,3 +150,7 @@ variable "alb_egress_ip_protocol" {
 variable "albtargetgroup_vpc_id" {
   type = string
 }
+
+variable "acm_certificate_arn" {
+  type = string
+}
