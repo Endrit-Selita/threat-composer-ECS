@@ -15,10 +15,6 @@ variable "ttl" {
   type        = number
 }
 
-variable "zone_id" {
-    description = "the route 53 zone id" # the default refernce aws_route53_zone.r53_zone.id will be on the main.tf terraform file
-}
-
 #### ALB ####
 variable "alb-ecs-name" {
   type        = string
@@ -30,10 +26,6 @@ variable "alb-ecs-internal" {
 
 variable "alb-ecs-load_balancer_type" {
   type        = string
-}
-
-variable "alb-ecs_public_subnets" {
-  type = list(string)
 }
 
 variable "alb-ecs-enable_deletion_protection" {
