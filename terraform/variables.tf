@@ -131,3 +131,32 @@ variable "alb_egress_cidr_ipv4" {
 variable "alb_egress_ip_protocol" {
   type = string
 }
+
+############### BAckend ###############
+variable "aws_s3_bucket_name" {
+  type = string
+}
+
+variable "aws_dynamodb_table_name" {
+  type = string
+}
+
+variable "aws_dynamodb_table_hash_key" {
+  type = string
+}
+
+variable "aws_dynamodb_table_read_capacity" {
+  type = number
+}
+
+variable "aws_dynamodb_table_write_capacity" {
+  type = number
+}
+
+variable "aws_dynamodb_table_attribute_name" {
+  type = string
+}
+
+variable "aws_dynamodb_table_attribute_type" {
+  type = string
+}

@@ -44,9 +44,14 @@ alb_egress_cidr_ipv4 = var.alb_egress_cidr_ipv4
 alb_egress_ip_protocol = var.alb_egress_ip_protocol
 }
 
+module "BAckend" {
+  source = "./modules/Backend"
 
-
-
-
-
-
+aws_s3_bucket_name = var.aws_s3_bucket_name
+aws_dynamodb_table_name = var.aws_dynamodb_table_name
+aws_dynamodb_table_hash_key = var.aws_dynamodb_table_hash_key
+aws_dynamodb_table_read_capacity = var.aws_dynamodb_table_read_capacity
+aws_dynamodb_table_write_capacity = var.aws_dynamodb_table_write_capacity
+aws_dynamodb_table_attribute_name = var.aws_dynamodb_table_attribute_name
+aws_dynamodb_table_attribute_type = var.aws_dynamodb_table_attribute_type
+}
