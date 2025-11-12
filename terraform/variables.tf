@@ -1,4 +1,4 @@
-#### ACM ####
+############### ACM ###############
 
 variable "domain_name" {
   description = "Domain name for ACM certificate"
@@ -15,8 +15,8 @@ variable "ttl" {
   type        = number
 }
 
-#### ALB ####
-variable "alb-ecs-name" {
+############### ALB ###############
+variable "alb-ecs-name"{
   type        = string
 }
 
@@ -159,4 +159,17 @@ variable "aws_dynamodb_table_attribute_name" {
 
 variable "aws_dynamodb_table_attribute_type" {
   type = string
+}
+
+############### ECR ###############
+variable "aws_ecr_repository_name" {
+    type = string
+}
+
+variable "aws_ecr_repository_image_tag_mutability" {
+    type = string
+}
+
+variable "ecr_scan_on_push" {
+    type = bool
 }

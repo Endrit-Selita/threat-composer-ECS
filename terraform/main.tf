@@ -55,3 +55,11 @@ aws_dynamodb_table_write_capacity = var.aws_dynamodb_table_write_capacity
 aws_dynamodb_table_attribute_name = var.aws_dynamodb_table_attribute_name
 aws_dynamodb_table_attribute_type = var.aws_dynamodb_table_attribute_type
 }
+
+module "ECR" {
+  source = "./modules/ECR"
+
+  aws_ecr_repository_name = var.aws_ecr_repository_name
+  aws_ecr_repository_image_tag_mutability = var.aws_ecr_repository_image_tag_mutability
+  ecr_scan_on_push = var.ecr_scan_on_push
+}
