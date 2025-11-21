@@ -7,11 +7,11 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "mys3bucket-euwest2"
+    bucket = var.aws_s3_bucket_name
     key    = "terraform.tfstate"
     region = "eu-west-2"
     encrypt      = true  
-    dynamodb_table = "dynamodb_terraform_lock"
+    dynamodb_table = var.aws_dynamodb_table_name
   }
 }
 
