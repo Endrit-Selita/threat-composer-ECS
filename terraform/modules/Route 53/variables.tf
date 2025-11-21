@@ -17,3 +17,11 @@ variable "aws_route53_alias_evaluate_target_health" {
   type = bool
   default = true
 }
+
+variable "alias_target_dns_name" {
+  type = string
+}
+
+variable "alias_target_zone_id" {
+  type = string
+}

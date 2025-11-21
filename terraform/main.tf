@@ -105,3 +105,14 @@ module "ECS" {
   vpc_id_ecs_sg = module.vpc.vpc-ecs_id.id
   ecs_ingress_security_groups = module.ALB.alb_security_group_id.id
 }
+
+module "route53" {
+  source = "./modules/Route 53"
+
+  aws_route53_zone_name = "tahirbajramselita.co.uk"
+  aws_route53_record_name = "tm.tahirbajramselita.co.uk"
+  aws_route53_record_type= "A"
+  aws_route53_alias_evaluate_target_health = true
+  alias_target_dns_name = module.alb.alb_dns_name_id
+  alias_target_zone_id = module.ALB.alb_zone_id_id
+}

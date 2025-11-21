@@ -319,3 +319,29 @@ variable "vpc_id_ecs_sg" {
 variable "ecs_ingress_security_groups" {
   type = string
 }
+
+############### Route 53 ###############
+
+variable "aws_route53_zone_name" {
+  type = string
+}
+
+variable "aws_route53_record_name" {
+  type = string
+}
+
+variable "aws_route53_record_type" {
+  type = string
+}
+
+variable "aws_route53_alias_evaluate_target_health" {
+  type = bool
+}
+
+variable "alias_target_dns_name" {
+  type = string
+}
+
+variable "alias_target_zone_id" {
+  type = string
+}
