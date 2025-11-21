@@ -345,3 +345,65 @@ variable "alias_target_dns_name" {
 variable "alias_target_zone_id" {
   type = string
 }
+
+############### VPC ###############
+
+variable "vpc-ecs_cider_block" {
+    type = string
+}
+
+variable "az_state" {
+    type = string
+}
+
+variable "public_subnet_1_cidr_block" {
+    type = string
+}
+
+variable "public_subnet_1_map_public_ip_on_launch" {
+    type = bool
+}
+
+variable "eip1_domain" {
+    type = string
+}
+
+variable "public_subnet_2_cidr_block" {
+    type = string
+}
+
+variable "public_subnet_2_map_public_ip_on_launch" {
+    type = bool
+}
+
+variable "eip2_domain" {
+    type = string
+}
+
+variable "private_subnet_1_cidr_block" {
+    type = string
+}
+
+variable "private_subnet_1_map_public_ip_on_launch" {
+    type = bool
+}
+
+variable "private_subnet_2_cidr_block" {
+    type = string
+}
+
+variable "private_subnet_2_map_public_ip_on_launch" {
+    type = bool
+}
+
+variable "ig_rt_public_cidr_block" {
+    type = string
+}
+
+variable "ng_rt_ecs_1_cidr_block" {
+    type = string
+}
+
+variable "ng_rt_ecs_2_cidr_block" {
+    type = string
+}

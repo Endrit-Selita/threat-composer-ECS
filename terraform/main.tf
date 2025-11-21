@@ -116,3 +116,23 @@ module "route53" {
   alias_target_dns_name = module.alb.alb_dns_name_id
   alias_target_zone_id = module.ALB.alb_zone_id_id
 }
+
+module "VPC" {
+  source = "./modules/VPC"
+
+   vpc-ecs_cider_block = var.vpc-ecs_cider_block
+   az_state = var.az_state
+   public_subnet_1_cidr_block = var.public_subnet_1_cidr_block
+   public_subnet_1_map_public_ip_on_launch = var.public_subnet_1_map_public_ip_on_launch
+   eip1_domain = var.eip1_domain
+   public_subnet_2_cidr_block = var.public_subnet_2_cidr_block
+   public_subnet_2_map_public_ip_on_launch = var.public_subnet_2_map_public_ip_on_launch
+   eip2_domain = var.eip2_domain
+   private_subnet_1_cidr_block = var.private_subnet_1_cidr_block
+   private_subnet_1_map_public_ip_on_launch = var.private_subnet_1_map_public_ip_on_launch
+   private_subnet_2_cidr_block = var.private_subnet_2_cidr_block
+   private_subnet_2_map_public_ip_on_launch = var.private_subnet_2_map_public_ip_on_launch
+   ig_rt_public_cidr_block = var.ig_rt_public_cidr_block
+   ng_rt_ecs_1_cidr_block=  var.ng_rt_ecs_1_cidr_block
+   ng_rt_ecs_2_cidr_block = var.ng_rt_ecs_2_cidr_block
+}
