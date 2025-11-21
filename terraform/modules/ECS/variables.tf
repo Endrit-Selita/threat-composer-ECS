@@ -125,7 +125,6 @@ variable "ecs_network_configuration_apip" {
 
 variable "ecs_network_configuration_subnets" {
   type = list(string)
-  default = [aws_subnet.private1.id, aws_subnet.private2.id]
 }
 
 variable "ecs_sg_name" {
@@ -166,4 +165,16 @@ variable "ecs_sg_egress_protocol" {
 variable "ecs_sg_egress_cidr_blocks" {
   type = string
   default = "0.0.0.0/0"
+}
+
+variable "target_group_arn" {
+  type = string
+}
+
+variable "vpc_id_ecs_sg" {
+  type = string
+}
+
+variable "ecs_ingress_security_groups" {
+  type = string
 }

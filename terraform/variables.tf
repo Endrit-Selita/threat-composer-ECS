@@ -173,3 +173,149 @@ variable "aws_ecr_repository_image_tag_mutability" {
 variable "ecr_scan_on_push" {
     type = bool
 }
+
+############### ECS ###############
+
+variable "ecs_cluster_name" {
+  type = string
+}
+
+variable "ecs_logging" {
+  type = string
+}
+
+variable "cloud_watch_encryption" {
+  type = bool
+}
+
+variable "cloud_watch_name" {
+  type = string
+}
+
+variable "deletion_window" {
+  type = number
+}
+
+variable "iam_policy_action" {
+  type = string
+}
+
+variable "principals_type" {
+  type = string
+}
+
+variable "principals_identifiers" {
+  type = string
+}
+
+variable "ecs_iam_role_name" {
+  type = string
+}
+
+variable "ecs_iam_role_assume_role_policy" {
+  type = string
+}
+
+variable "ecs_exec_attach_policy_arn" {
+  type = string
+}
+
+variable "ecs_service_family" {
+  type = string
+}
+
+variable "ecs_service_requires_compatibilities" {
+  type = string
+}
+
+variable "ecs_service_network_mode" {
+  type = string
+}
+
+variable "ecs_service_cpu" {
+  type = number
+}
+
+variable "ecs_service_memory" {
+  type = number
+}
+
+variable "con_def_name" {
+  type = string
+}
+
+variable "con_def_cpu" {
+  type = number
+}
+
+variable "ecs_service_name" {
+  type = string
+}
+
+variable "ecs_service_launch_type" {
+  type = string
+}
+
+variable "ecs_service_platform_version" {
+  type = string
+}
+
+variable "ecs_service_desired_count" {
+  type = number
+}
+
+variable "ecs_load_balancer_container_name" {
+  type = string
+}
+
+variable "ecs_load_balancer_container_port" {
+  type = number
+}
+
+variable "ecs_network_configuration_apip" {
+  type = bool
+}
+
+variable "ecs_sg_name" {
+  type = string
+}
+
+variable "ecs_sg_ingress_from_port" {
+  type = number
+}
+
+variable "ecs_sg_ingress_to_port" {
+  type = number
+}
+
+variable "ecs_sg_ingress_protocol" {
+  type = string
+}
+
+variable "ecs_sg_egress_from_port" {
+  type = number
+}
+
+variable "ecs_sg_egress_to_port" {
+  type = number
+}
+
+variable "ecs_sg_egress_protocol" {
+  type = string
+}
+
+variable "ecs_sg_egress_cidr_blocks" {
+  type = string
+}
+
+variable "target_group_arn" {
+  type = string
+}
+
+variable "vpc_id_ecs_sg" {
+  type = string
+}
+
+variable "ecs_ingress_security_groups" {
+  type = string
+}

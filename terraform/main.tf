@@ -12,8 +12,8 @@ module "ALB" {
 
 alb-ecs-name = var.alb-ecs-name
 alb-ecs-internal = var.alb-ecs-internal
-alb-ecs-load_balancer_type = var.alb-ecs-load_balancer_type # this refernces the public_subnets output from the vpc module
-alb-ecs_public_subnets = module.vpc.public_subnets_id
+alb-ecs-load_balancer_type = var.alb-ecs-load_balancer_type 
+alb-ecs_public_subnets = module.vpc.public_subnets_id # this refernces the public_subnets output from the vpc module
 acm_certificate_arn = module.ACM.acm_cert_output_arn
 alb-ecs-enable_deletion_protection = var.alb-ecs-enable_deletion_protection
 albtargetgroup_vpc_id = module.vpc.vpc-ecs_id
@@ -62,4 +62,46 @@ module "ECR" {
   aws_ecr_repository_name = var.aws_ecr_repository_name
   aws_ecr_repository_image_tag_mutability = var.aws_ecr_repository_image_tag_mutability
   ecr_scan_on_push = var.ecr_scan_on_push
+}
+
+module "ECS" {
+  source = "./modules/ECS"
+
+  ecs_cluster_name= var.ecs_cluster_name
+  ecs_logging= var.ecs_logging
+  cloud_watch_encryption= var.cloud_watch_encryption
+  cloud_watch_name= var.cloud_watch_name
+  deletion_window= var.deletion_window
+  iam_policy_action= var.iam_policy_action
+  principals_type= var.principals_type
+  principals_identifiers=var.principals_identifiers
+  ecs_iam_role_name= var.ecs_iam_role_name
+  ecs_iam_role_assume_role_policy= var.ecs_iam_role_assume_role_policy
+  ecs_exec_attach_policy_arn= var.ecs_exec_attach_policy_arn
+  ecs_service_family = var.ecs_service_family
+  ecs_service_requires_compatibilities= var.ecs_service_requires_compatibilities
+  ecs_service_network_mode = var.ecs_service_network_mode 
+  ecs_service_cpu = var.ecs_service_cpu
+  ecs_service_memory= var.ecs_service_memory
+  con_def_name= var.con_def_name
+  con_def_cpu = var.con_def_cpu
+  ecs_service_name= var.ecs_service_name
+  ecs_service_launch_type= var.ecs_service_launch_type
+  ecs_service_platform_version= var.ecs_service_platform_version
+  ecs_service_desired_count = var.ecs_service_desired_count
+  ecs_load_balancer_container_name= var.ecs_load_balancer_container_name
+  ecs_load_balancer_container_port= var.ecs_load_balancer_container_port
+  ecs_network_configuration_apip= var.ecs_network_configuration_apip
+  ecs_network_configuration_subnets = module.vpc.private_subnets_id
+  ecs_sg_name= var.ecs_sg_name
+  ecs_sg_ingress_from_port= var.ecs_sg_ingress_from_port
+  ecs_sg_ingress_to_port= var.ecs_sg_ingress_to_port
+  ecs_sg_ingress_protocol= var.ecs_sg_ingress_protocol
+  ecs_sg_egress_from_port= var.ecs_sg_egress_from_port
+  ecs_sg_egress_to_port= var.ecs_sg_egress_to_port
+  ecs_sg_egress_protocol= var.ecs_sg_egress_protocol
+  ecs_sg_egress_cidr_blocks= var.ecs_sg_egress_cidr_blocks
+  target_group_arn = module.alb.target_group_arn_id
+  vpc_id_ecs_sg = module.vpc.vpc-ecs_id.id
+  ecs_ingress_security_groups = module.ALB.alb_security_group_id.id
 }

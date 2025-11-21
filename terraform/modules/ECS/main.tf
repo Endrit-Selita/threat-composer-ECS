@@ -93,7 +93,7 @@ resource "aws_ecs_service" "ecs_service" {
   desired_count   = var.ecs_service_desired_count
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.albtargetgroup.id
+    target_group_arn = var.target_group_arn
     container_name   = var.ecs_load_balancer_container_name
     container_port   = var.ecs_load_balancer_container_port
   }
@@ -108,13 +108,13 @@ resource "aws_ecs_service" "ecs_service" {
 resource "aws_security_group" "ecs_sg" {
   name        = var.ecs_sg_name
   description = "Allow HTTP inbound traffic from ALB"
-  vpc_id      = aws_vpc.vpc-ecs.id
+  vpc_id      = var.vpc_id_ecs_sg
 
 ingress {
       from_port   = var.ecs_sg_ingress_from_port
       to_port     = var.ecs_sg_ingress_to_port
       protocol    = var.ecs_sg_ingress_protocol
-      security_groups = [aws_security_group.alb_sg.id]
+      security_groups = [var.ecs_ingress_security_groups]
       }
 
 egress {
