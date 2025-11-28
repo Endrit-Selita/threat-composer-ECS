@@ -16,72 +16,72 @@ variable "ttl" {
 }
 
 ############### ALB ###############
-variable "alb-ecs-name"{
-  type        = string
+variable "alb-ecs-name" {
+  type = string
 }
 
 variable "alb-ecs-internal" {
-  type        = bool
+  type = bool
 }
 
 variable "alb-ecs-load_balancer_type" {
-  type        = string
+  type = string
 }
 
 variable "alb-ecs-enable_deletion_protection" {
-  type        = bool
+  type = bool
 }
 
 variable "aws_lb_target_group_name" {
-  type        = string
+  type = string
 }
 
 variable "aws_lb_target_group_port" {
-  type        = number
+  type = number
 }
 
 variable "aws_lb_target_group_protocol" {
-  type        = string
+  type = string
 }
 
 variable "aws_lb_target_group_target_type" {
-  type        = string
+  type = string
 }
 
 variable "health_check_enabled" {
-  type        = bool
+  type = bool
 }
 
 variable "health_check_interval" {
-  type        = number
+  type = number
 }
 
 variable "health_check_path" {
-  type        = string
+  type = string
 }
 
 variable "health_check_port" {
-  type        = string
+  type = string
 }
 
 variable "health_check_protocol" {
-  type        = string
+  type = string
 }
 
 variable "health_check_timeout" {
-  type        = number
+  type = number
 }
 
 variable "health_check_healthy_threshold" {
-  type        = number
+  type = number
 }
 
 variable "health_check_unhealthy_threshold" {
-  type        = number
+  type = number
 }
 
 variable "health_check_matcher" {
-  type        = string
+  type = string
 }
 
 variable "HTTPS_l_ssl_policy" {
@@ -163,15 +163,15 @@ variable "aws_dynamodb_table_attribute_type" {
 
 ############### ECR ###############
 variable "aws_ecr_repository_name" {
-    type = string
+  type = string
 }
 
 variable "aws_ecr_repository_image_tag_mutability" {
-    type = string
+  type = string
 }
 
 variable "ecr_scan_on_push" {
-    type = bool
+  type = bool
 }
 
 ############### ECS ###############
@@ -212,9 +212,9 @@ variable "ecs_iam_role_name" {
   type = string
 }
 
-variable "ecs_iam_role_assume_role_policy" {
-  type = string
-}
+#variable "ecs_iam_role_assume_role_policy" {
+#  type = string
+#}
 
 variable "ecs_exec_attach_policy_arn" {
   type = string
@@ -349,61 +349,61 @@ variable "alias_target_zone_id" {
 ############### VPC ###############
 
 variable "vpc-ecs_cider_block" {
-    type = string
+  type = string
 }
 
 variable "az_state" {
-    type = string
+  type = string
 }
 
 variable "public_subnet_1_cidr_block" {
-    type = string
+  type = string
 }
 
 variable "public_subnet_1_map_public_ip_on_launch" {
-    type = bool
+  type = bool
 }
 
 variable "eip1_domain" {
-    type = string
+  type = string
 }
 
 variable "public_subnet_2_cidr_block" {
-    type = string
+  type = string
 }
 
 variable "public_subnet_2_map_public_ip_on_launch" {
-    type = bool
+  type = bool
 }
 
 variable "eip2_domain" {
-    type = string
+  type = string
 }
 
 variable "private_subnet_1_cidr_block" {
-    type = string
+  type = string
 }
 
 variable "private_subnet_1_map_public_ip_on_launch" {
-    type = bool
+  type = bool
 }
 
 variable "private_subnet_2_cidr_block" {
-    type = string
+  type = string
 }
 
 variable "private_subnet_2_map_public_ip_on_launch" {
-    type = bool
+  type = bool
 }
 
 variable "ig_rt_public_cidr_block" {
-    type = string
+  type = string
 }
 
 variable "ng_rt_ecs_1_cidr_block" {
-    type = string
+  type = string
 }
 
 variable "ng_rt_ecs_2_cidr_block" {
-    type = string
+  type = string
 }

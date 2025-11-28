@@ -41,17 +41,17 @@ data "aws_iam_policy_document" "ecs_iam_pd" {
 
 resource "aws_iam_role" "ecs_iam_role" {
   name               = var.ecs_iam_role_name
-  assume_role_policy = var.ecs_iam_role_assume_role_policy
+  assume_role_policy = data.aws_iam_policy_document.ecs_iam_pd.json
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_exec_attach" {
   role       = aws_iam_role.ecs_iam_role.name
   policy_arn = var.ecs_exec_attach_policy_arn
 }
-  
+
 #ECS Task Defenition
 resource "aws_ecs_task_definition" "service" {
-  family = var.ecs_service_family
+  family                   = var.ecs_service_family
   requires_compatibilities = [var.ecs_service_requires_compatibilities]
   network_mode             = var.ecs_service_network_mode
   cpu                      = var.ecs_service_cpu
@@ -72,25 +72,25 @@ resource "aws_ecs_task_definition" "service" {
         }
       ]
 
-    logConfiguration = {
-      logDriver                 = "awslogs",
-      options = {
-        awslogs-group           = aws_cloudwatch_log_group.ecs_cloudwatch.name,
-        awslogs-region          = "eu-west-2",
-        awslogs-stream-prefix   = "ecs"
-      }
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.ecs_cloudwatch.name,
+          awslogs-region        = "eu-west-2",
+          awslogs-stream-prefix = "ecs"
+        }
       }
     }
   ])
 }
 
 resource "aws_ecs_service" "ecs_service" {
-  name            = var.ecs_service_name
-  launch_type     = var.ecs_service_launch_type
+  name             = var.ecs_service_name
+  launch_type      = var.ecs_service_launch_type
   platform_version = var.ecs_service_platform_version
-  cluster         = aws_ecs_cluster.ecs_cluster.id
-  task_definition = aws_ecs_task_definition.service.arn
-  desired_count   = var.ecs_service_desired_count
+  cluster          = aws_ecs_cluster.ecs_cluster.id
+  task_definition  = aws_ecs_task_definition.service.arn
+  desired_count    = var.ecs_service_desired_count
 
   load_balancer {
     target_group_arn = var.target_group_arn
@@ -100,27 +100,27 @@ resource "aws_ecs_service" "ecs_service" {
 
   network_configuration {
     assign_public_ip = var.ecs_network_configuration_apip
-    security_groups = [aws_security_group.ecs_sg.id]
+    security_groups  = [aws_security_group.ecs_sg.id]
     subnets          = var.ecs_network_configuration_subnets
   }
 }
- 
+
 resource "aws_security_group" "ecs_sg" {
   name        = var.ecs_sg_name
   description = "Allow HTTP inbound traffic from ALB"
   vpc_id      = var.vpc_id_ecs_sg
 
-ingress {
-      from_port   = var.ecs_sg_ingress_from_port
-      to_port     = var.ecs_sg_ingress_to_port
-      protocol    = var.ecs_sg_ingress_protocol
-      security_groups = [var.ecs_ingress_security_groups]
-      }
+  ingress {
+    from_port       = var.ecs_sg_ingress_from_port
+    to_port         = var.ecs_sg_ingress_to_port
+    protocol        = var.ecs_sg_ingress_protocol
+    security_groups = [var.ecs_ingress_security_groups]
+  }
 
-egress {
-      from_port   = var.ecs_sg_egress_from_port
-      to_port     = var.ecs_sg_egress_to_port
-      protocol    = var.ecs_sg_egress_protocol
-      cidr_blocks = [var.ecs_sg_egress_cidr_blocks]
+  egress {
+    from_port   = var.ecs_sg_egress_from_port
+    to_port     = var.ecs_sg_egress_to_port
+    protocol    = var.ecs_sg_egress_protocol
+    cidr_blocks = [var.ecs_sg_egress_cidr_blocks]
   }
 }
