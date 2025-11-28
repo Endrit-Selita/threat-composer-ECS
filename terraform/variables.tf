@@ -32,9 +32,9 @@ variable "alb-ecs-enable_deletion_protection" {
   type = bool
 }
 
-variable "aws_lb_target_group_name" {
-  type = string
-}
+# variable "aws_lb_target_group_name" {
+#   type = string
+# }
 
 variable "aws_lb_target_group_port" {
   type = number
@@ -312,13 +312,13 @@ variable "target_group_arn" {
   type = string
 }
 
-variable "vpc_id_ecs_sg" {
-  type = string
-}
+# variable "vpc_id_ecs_sg" {
+#   type = string
+# }
 
-variable "ecs_ingress_security_groups" {
-  type = string
-}
+# variable "ecs_ingress_security_groups" {
+#  type = string
+# }
 
 ############### Route 53 ###############
 
@@ -338,13 +338,13 @@ variable "aws_route53_alias_evaluate_target_health" {
   type = bool
 }
 
-variable "alias_target_dns_name" {
-  type = string
-}
+# variable "alias_target_dns_name" {
+#   type = string
+# }
 
-variable "alias_target_zone_id" {
-  type = string
-}
+# variable "alias_target_zone_id" {
+#   type = string
+# }
 
 ############### VPC ###############
 

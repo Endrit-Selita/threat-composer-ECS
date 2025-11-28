@@ -1,4 +1,4 @@
-module "ACM" {
+module "acm" {
   source = "./modules/ACM"
 
   domain_name       = var.domain_name
@@ -7,14 +7,14 @@ module "ACM" {
   zone_id           = module.route53.zone_id # this refernces the zone_id output from the route53 module
 }
 
-module "ALB" {
+module "alb" {
   source = "./modules/ALB"
 
   alb-ecs-name                       = var.alb-ecs-name
   alb-ecs-internal                   = var.alb-ecs-internal
   alb-ecs-load_balancer_type         = var.alb-ecs-load_balancer_type
   alb-ecs_public_subnets             = module.vpc.public_subnets_id # this refernces the public_subnets output from the vpc module
-  acm_certificate_arn                = module.ACM.acm_cert_output_arn
+  acm_certificate_arn                = module.acm.acm_cert_output_arn
   alb-ecs-enable_deletion_protection = var.alb-ecs-enable_deletion_protection
   albtargetgroup_vpc_id              = module.vpc.vpc-ecs_id
   aws_lb_target_group_name           = var.aws_lb_target_group_name
@@ -44,7 +44,7 @@ module "ALB" {
   alb_egress_ip_protocol             = var.alb_egress_ip_protocol
 }
 
-module "Backend" {
+module "backend" {
   source = "./modules/Backend"
 
   aws_s3_bucket_name                = var.aws_s3_bucket_name
@@ -56,7 +56,7 @@ module "Backend" {
   aws_dynamodb_table_attribute_type = var.aws_dynamodb_table_attribute_type
 }
 
-module "ECR" {
+module "ecr" {
   source = "./modules/ECR"
 
   aws_ecr_repository_name                 = var.aws_ecr_repository_name
@@ -64,7 +64,7 @@ module "ECR" {
   ecr_scan_on_push                        = var.ecr_scan_on_push
 }
 
-module "ECS" {
+module "ecs" {
   source = "./modules/ECS"
 
   ecs_cluster_name       = var.ecs_cluster_name
@@ -101,9 +101,9 @@ module "ECS" {
   ecs_sg_egress_to_port                = var.ecs_sg_egress_to_port
   ecs_sg_egress_protocol               = var.ecs_sg_egress_protocol
   ecs_sg_egress_cidr_blocks            = var.ecs_sg_egress_cidr_blocks
-  target_group_arn                     = module.ALB.target_group_arn_id
-  vpc_id_ecs_sg                        = module.vpc.vpc-ecs_id.id
-  ecs_ingress_security_groups          = module.ALB.alb_security_group_id.id
+  target_group_arn                     = module.alb.target_group_arn
+  vpc_id_ecs_sg                        = module.vpc.vpc-ecs_id
+  ecs_ingress_security_groups          = module.alb.alb_security_group_id
 }
 
 module "route53" {
@@ -113,11 +113,11 @@ module "route53" {
   aws_route53_record_name                  = "tm.tahirbajramselita.co.uk"
   aws_route53_record_type                  = "A"
   aws_route53_alias_evaluate_target_health = true
-  alias_target_dns_name                    = module.ALB.alb_dns_name_id
-  alias_target_zone_id                     = module.ALB.alb_zone_id_id
+  alias_target_dns_name                    = module.alb.alb_dns_name
+  alias_target_zone_id                     = module.alb.alb_zone_id
 }
 
-module "VPC" {
+module "vpc" {
   source = "./modules/VPC"
 
   vpc-ecs_cider_block                      = var.vpc-ecs_cider_block
