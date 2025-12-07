@@ -56,14 +56,6 @@ module "backend" {
   aws_dynamodb_table_attribute_type = var.aws_dynamodb_table_attribute_type
 }
 
-# module "ecr" {
-#   source = "./modules/ECR"
-
-#   aws_ecr_repository_name                 = var.aws_ecr_repository_name
-#   aws_ecr_repository_image_tag_mutability = var.aws_ecr_repository_image_tag_mutability
-#   ecr_scan_on_push                        = var.ecr_scan_on_push
-# }
-
 module "ecs" {
   source = "./modules/ECS"
 

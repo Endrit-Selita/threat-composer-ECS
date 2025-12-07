@@ -6,9 +6,11 @@ COPY . .
 RUN yarn build
 
 FROM node:20-alpine
+RUN adduser -S devops_1
 WORKDIR /app
 COPY --from=builder /app/build ./build
-RUN npm install -g serve
+RUN npm install -g serve && chown -R devops_1:devops_1 /app
+USER devops_1
 ENV PORT=8080
 EXPOSE 8080
 CMD ["serve", "-s", "build", "-l", "8080"]
