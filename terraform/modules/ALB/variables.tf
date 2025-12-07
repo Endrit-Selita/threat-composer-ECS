@@ -29,7 +29,7 @@ variable "aws_lb_target_group_name" {
 
 variable "aws_lb_target_group_port" {
   type    = number
-  default = 80
+  default = 8080
 }
 
 variable "aws_lb_target_group_protocol" {

@@ -1,6 +1,8 @@
 ############### S3 Bucket ###############
 resource "aws_s3_bucket" "mys3bucket-euwest2" {
   bucket = var.aws_s3_bucket_name
+  force_destroy = true  
+
 }
 
 ############### dynamoDB ###############

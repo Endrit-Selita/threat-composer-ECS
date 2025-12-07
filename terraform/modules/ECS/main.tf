@@ -61,14 +61,14 @@ resource "aws_ecs_task_definition" "service" {
   container_definitions = jsonencode([
     {
       name      = "tcdf"
-      image     = "${aws_ecr_repository.ecr_app.repository_url}:latest"
+      image     = "${aws_ecr_repository.ecr_app.repository_url}:v5"
       cpu       = 10
       memory    = 512
       essential = true
       portMappings = [
         {
-          containerPort = 80,
-          hostPort      = 80
+          containerPort = 8080,
+          hostPort      = 8080
         }
       ]
 
@@ -122,5 +122,16 @@ resource "aws_security_group" "ecs_sg" {
     to_port     = var.ecs_sg_egress_to_port
     protocol    = var.ecs_sg_egress_protocol
     cidr_blocks = [var.ecs_sg_egress_cidr_blocks]
+  }
+}
+
+############### ECR ###############
+resource "aws_ecr_repository" "ecr_app" {
+  name                 = var.aws_ecr_repository_name
+  image_tag_mutability = var.aws_ecr_repository_image_tag_mutability
+  force_delete       = true  
+
+  image_scanning_configuration {
+    scan_on_push = var.ecr_scan_on_push
   }
 }

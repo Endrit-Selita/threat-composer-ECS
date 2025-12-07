@@ -115,7 +115,7 @@ variable "ecs_load_balancer_container_name" {
 
 variable "ecs_load_balancer_container_port" {
   type    = number
-  default = 80
+  default = 8080
 }
 
 variable "ecs_network_configuration_apip" {
@@ -177,4 +177,22 @@ variable "vpc_id_ecs_sg" {
 
 variable "ecs_ingress_security_groups" {
   type = string
+}
+
+
+### ECR ###
+
+variable "aws_ecr_repository_name" {
+  type    = string
+  default = "ecr_app"
+}
+
+variable "aws_ecr_repository_image_tag_mutability" {
+  type    = string
+  default = "MUTABLE"
+}
+
+variable "ecr_scan_on_push" {
+  type    = bool
+  default = true
 }

@@ -13,8 +13,8 @@ module "alb" {
   alb-ecs-name                       = var.alb-ecs-name
   alb-ecs-internal                   = var.alb-ecs-internal
   alb-ecs-load_balancer_type         = var.alb-ecs-load_balancer_type
-  alb-ecs_public_subnets             = module.vpc.public_subnets_id # this refernces the public_subnets output from the vpc module
-  acm_certificate_arn                = module.acm.acm_cert_output_arn
+  alb-ecs_public_subnets             = module.vpc.public_subnets # this refernces the public_subnets output from the vpc module
+  acm_certificate_arn                = module.acm.acm_cert_output
   alb-ecs-enable_deletion_protection = var.alb-ecs-enable_deletion_protection
   albtargetgroup_vpc_id              = module.vpc.vpc-ecs_id
   aws_lb_target_group_name           = var.aws_lb_target_group_name
@@ -56,13 +56,13 @@ module "backend" {
   aws_dynamodb_table_attribute_type = var.aws_dynamodb_table_attribute_type
 }
 
-module "ecr" {
-  source = "./modules/ECR"
+# module "ecr" {
+#   source = "./modules/ECR"
 
-  aws_ecr_repository_name                 = var.aws_ecr_repository_name
-  aws_ecr_repository_image_tag_mutability = var.aws_ecr_repository_image_tag_mutability
-  ecr_scan_on_push                        = var.ecr_scan_on_push
-}
+#   aws_ecr_repository_name                 = var.aws_ecr_repository_name
+#   aws_ecr_repository_image_tag_mutability = var.aws_ecr_repository_image_tag_mutability
+#   ecr_scan_on_push                        = var.ecr_scan_on_push
+# }
 
 module "ecs" {
   source = "./modules/ECS"
@@ -92,7 +92,7 @@ module "ecs" {
   ecs_load_balancer_container_name     = var.ecs_load_balancer_container_name
   ecs_load_balancer_container_port     = var.ecs_load_balancer_container_port
   ecs_network_configuration_apip       = var.ecs_network_configuration_apip
-  ecs_network_configuration_subnets    = module.vpc.private_subnets_id
+  ecs_network_configuration_subnets    = module.vpc.private_subnets
   ecs_sg_name                          = var.ecs_sg_name
   ecs_sg_ingress_from_port             = var.ecs_sg_ingress_from_port
   ecs_sg_ingress_to_port               = var.ecs_sg_ingress_to_port
@@ -104,15 +104,22 @@ module "ecs" {
   target_group_arn                     = module.alb.target_group_arn
   vpc_id_ecs_sg                        = module.vpc.vpc-ecs_id
   ecs_ingress_security_groups          = module.alb.alb_security_group_id
+
+  ##ECR##
+
+  aws_ecr_repository_name                 = var.aws_ecr_repository_name
+  aws_ecr_repository_image_tag_mutability = var.aws_ecr_repository_image_tag_mutability
+  ecr_scan_on_push                        = var.ecr_scan_on_push
+  
 }
 
 module "route53" {
   source = "./modules/Route 53"
 
-  aws_route53_zone_name                    = "tahirbajramselita.co.uk"
-  aws_route53_record_name                  = "tm.tahirbajramselita.co.uk"
-  aws_route53_record_type                  = "A"
-  aws_route53_alias_evaluate_target_health = true
+  aws_route53_zone_name                    = var.aws_route53_zone_name
+  aws_route53_record_name                  = var.aws_route53_record_name
+  aws_route53_record_type                  = var.aws_route53_record_type
+  aws_route53_alias_evaluate_target_health = var.aws_route53_alias_evaluate_target_health
   alias_target_dns_name                    = module.alb.alb_dns_name
   alias_target_zone_id                     = module.alb.alb_zone_id
 }

@@ -32,9 +32,9 @@ variable "alb-ecs-enable_deletion_protection" {
   type = bool
 }
 
-# variable "aws_lb_target_group_name" {
-#   type = string
-# }
+variable "aws_lb_target_group_name" {
+  type = string
+}
 
 variable "aws_lb_target_group_port" {
   type = number
@@ -308,9 +308,9 @@ variable "ecs_sg_egress_cidr_blocks" {
   type = string
 }
 
-variable "target_group_arn" {
-  type = string
-}
+# variable "target_group_arn" {
+#   type = string
+# }
 
 # variable "vpc_id_ecs_sg" {
 #   type = string

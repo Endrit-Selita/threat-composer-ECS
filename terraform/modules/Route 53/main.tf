@@ -1,10 +1,10 @@
 ############### Create Route 53 ###############
-resource "aws_route53_zone" "r53_zone" {
+data "aws_route53_zone" "r53_zone" {
   name = var.aws_route53_zone_name
 }
 
 resource "aws_route53_record" "r53_record" {
-  zone_id = aws_route53_zone.r53_zone.id
+  zone_id = data.aws_route53_zone.r53_zone.id
   name    = var.aws_route53_record_name
   type    = var.aws_route53_record_type
 
