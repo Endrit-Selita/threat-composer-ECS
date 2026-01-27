@@ -1,0 +1,47 @@
+name: Terraform init and apply
+on:
+  workflow_dispatch:
+
+env:
+  AWS_REGION: eu-west-2
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }} # put in your account id here
+
+permissions:
+  id-token: write #  it allows github to make the oidc token
+  contents: read  #allows this pipeline to read files in this github repo
+
+jobs: 
+ terraform-apply:
+   name: Terraform apply-auto-approve
+   runs-on: ubuntu-latest
+   defaults:
+    run:
+      working-directory: ./terraform
+
+
+   steps:
+     - name: checks out code
+       uses: actions/checkout@v4
+     - name: configure aws credentials
+       uses: aws-actions/configure-aws-credentials@v3
+       with : 
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/oidc_ecs_permissions   # put in your account id here
+          aws-region: ${{ env.AWS_REGION }} # put in your region id here
+
+
+     - name: Hashicorp - Terraform setup
+       uses: hashicorp/setup-terraform@v3.1.2      
+  
+     - name: Terraform Init
+       run: terraform init
+    
+     - name: use tfavrs from secrets
+       run: |
+         cat <<'STOP' > terraform.tfvars
+         ${{ secrets.TFVARS_SECRET }}
+         STOP
+        
+        
+     - name: Terraform apply auto approve
+       run: terraform apply -auto-approve
+    

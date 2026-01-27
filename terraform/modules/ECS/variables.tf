@@ -179,20 +179,22 @@ variable "ecs_ingress_security_groups" {
   type = string
 }
 
-
+variable "ecr_image_uri" {
+  type = string
+}
 ### ECR ###
 
-variable "aws_ecr_repository_name" {
-  type    = string
-  default = "ecr_app"
-}
+#variable "aws_ecr_repository_name" {
+ # type    = string
+  #default = "ecr_app"
+#}
 
-variable "aws_ecr_repository_image_tag_mutability" {
-  type    = string
-  default = "MUTABLE"
-}
+#variable "aws_ecr_repository_image_tag_mutability" {
+ # type    = string
+  #default = "MUTABLE"
+#}
 
-variable "ecr_scan_on_push" {
-  type    = bool
-  default = true
-}
+#variable "ecr_scan_on_push" {
+#  type    = bool
+#  default = true
+#}
