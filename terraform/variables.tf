@@ -162,17 +162,17 @@ variable "aws_dynamodb_table_attribute_type" {
 }
 
 ############### ECR ###############
-variable "aws_ecr_repository_name" {
-  type = string
-}
+#variable "aws_ecr_repository_name" {
+#  type = string
+#}
 
-variable "aws_ecr_repository_image_tag_mutability" {
-  type = string
-}
+#variable "aws_ecr_repository_image_tag_mutability" {
+#  type = string
+#}
 
-variable "ecr_scan_on_push" {
-  type = bool
-}
+#variable "ecr_scan_on_push" {
+#  type = bool
+# }
 
 ############### ECS ###############
 
@@ -305,6 +305,10 @@ variable "ecs_sg_egress_protocol" {
 }
 
 variable "ecs_sg_egress_cidr_blocks" {
+  type = string
+}
+
+variable "ecr_image_uri" {
   type = string
 }
 

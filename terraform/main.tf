@@ -96,12 +96,12 @@ module "ecs" {
   target_group_arn                     = module.alb.target_group_arn
   vpc_id_ecs_sg                        = module.vpc.vpc-ecs_id
   ecs_ingress_security_groups          = module.alb.alb_security_group_id
-
+  ecr_image_uri                        = var.ecr_image_uri
   ##ECR##
 
-  aws_ecr_repository_name                 = var.aws_ecr_repository_name
-  aws_ecr_repository_image_tag_mutability = var.aws_ecr_repository_image_tag_mutability
-  ecr_scan_on_push                        = var.ecr_scan_on_push
+#  aws_ecr_repository_name                 = var.aws_ecr_repository_name
+ # aws_ecr_repository_image_tag_mutability = var.aws_ecr_repository_image_tag_mutability
+  #ecr_scan_on_push                        = var.ecr_scan_on_push
   
 }
 
