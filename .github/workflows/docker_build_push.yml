@@ -27,5 +27,6 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
       - name: Build and push docker image 
         run: |
-         docker build -f ./app/dockerfile -t $AWS_ECR_REPO:$IMAGE_TAG ./app  
+         cd app/dockerfile
+         docker build -t $AWS_ECR_REPO:$IMAGE_TAG ./app  
          docker push $AWS_ECR_REPO:$IMAGE_TAG
