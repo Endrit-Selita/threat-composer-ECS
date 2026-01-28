@@ -22,7 +22,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4.1.0
         with : 
           aws-region: eu-west-2
-          role-to-assume: ${{ env.AWS_OIDC }}
+          role-to-assume: ${{ secrets.AWS_OIDC }}
       - name: login to amazon ecr
         uses: aws-actions/amazon-ecr-login@v1
       - name: Build and push docker image 
