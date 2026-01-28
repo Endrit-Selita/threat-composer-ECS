@@ -6,15 +6,25 @@ COPY . .
 RUN yarn build
 
 FROM node:20-alpine
+<<<<<<< HEAD
 WORKDIR /app
 COPY --from=builder /app/build ./build
 RUN yarn global add serve
 RUN addgroup -g 1000 appgroup && adduser -D -u 1000 -G appgroup appuser
 USER appuser
+=======
+RUN addgroup -S ecsgroup && adduser -S devone -G ecsgroup
+WORKDIR /app
+COPY --from=builder /app/build ./build
+RUN chown -R devone:ecsgroup /app
+RUN yarn global add serve
+USER devone
+>>>>>>> 14ea4f2359d76addf2b346567dd9f530ec36d8c8
 ENV PORT=8080
 EXPOSE 8080
 CMD ["serve", "-s", "build", "-l", "8080"]
 
+<<<<<<< HEAD
 #FROM node:20-alpine AS builder
 #WORKDIR /app
 #COPY package*.json yarn.lock ./
@@ -32,3 +42,6 @@ CMD ["serve", "-s", "build", "-l", "8080"]
 #ENV PORT=8080
 #EXPOSE 8080
 #CMD ["serve", "-s", "build", "-l", "8080"]
+=======
+
+>>>>>>> 14ea4f2359d76addf2b346567dd9f530ec36d8c8
