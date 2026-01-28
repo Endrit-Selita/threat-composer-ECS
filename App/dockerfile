@@ -8,10 +8,11 @@ RUN yarn build
 FROM node:20-alpine
 RUN addgroup -S ecsgroup && adduser -S devone -G ecsgroup
 WORKDIR /app
-COPY --from=build /app/build ./build
+COPY --from=build /app/build ./builder
 RUN chown -R devone:ecsgroup /app
 RUN yarn global add serve
 USER devone
 ENV PORT=8080
 EXPOSE 8080
 CMD ["serve", "-s", "build", "-l", "8080"]
+
