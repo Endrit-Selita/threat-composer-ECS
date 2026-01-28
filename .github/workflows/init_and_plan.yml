@@ -1,4 +1,4 @@
-name: Terraform init and apply
+name: Terraform init and plan
 on:
   workflow_dispatch:
 
@@ -11,8 +11,8 @@ permissions:
   contents: read  #allows this pipeline to read files in this github repo
 
 jobs: 
- terraform-apply:
-   name: Terraform apply-auto-approve
+ terraform-init-plan:
+   name: Terraform init and plan
    runs-on: ubuntu-latest
    defaults:
     run:
@@ -29,11 +29,22 @@ jobs:
           role-to-assume: ${{ env.AWS_OIDC }}
 
 
+
      - name: Hashicorp - Terraform setup
        uses: hashicorp/setup-terraform@v3.1.2      
+
+
+     - name: setup tflint
+       uses: terraform-linters/setup-tflint@v4
+        
+     - name: terraform format check
+       run: terraform fmt -check
   
      - name: Terraform Init
        run: terraform init
+    
+     - name: terraform validate
+       run: terraform validate
     
      - name: use tfavrs from secrets
        run: |
@@ -42,5 +53,7 @@ jobs:
          STOP
         
         
-     - name: Terraform apply auto approve
-       run: terraform apply -auto-approve
+     - name: Terraform Plan
+       run: terraform plan
+    
+   

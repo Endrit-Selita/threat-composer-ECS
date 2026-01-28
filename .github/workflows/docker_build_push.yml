@@ -1,12 +1,12 @@
-name: build push docker image and psuh to ecr
+name: build docker image and push it to ecr
 on:
   workflow_dispatch:
 
 env:
   AWS_REGION: eu-west-2
-  AWS_ACCOUNT_ID: # ${{ secrets.AWS_ACCOUNT_ID }} add the secrect to github
-  AWS_ECR_REPO: # ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-2.amazonaws.com/threatcomposer/app do this on the console and add the secrect to github
-  IMAGE_TAG: ${{ github.sha }} # what is github.sha look it up
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_ECR_REPO: ${{ secrets.AWS_ECR_REPOSITORY_URI }}
+  IMAGE_TAG: main
 
 permissions:
   id-token: write #  it allows github to make the oidc token
@@ -19,13 +19,13 @@ jobs:
       - name: checks out code
         uses: actions/checkout@v4
       - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v3
+        uses: aws-actions/configure-aws-credentials@v4.1.0
         with : 
-          role-to-assume: # arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/oidc_ecs_permissions  do this on the console
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: eu-west-2
+          role-to-assume: ${{ env.AWS_OIDC }}
       - name: login to amazon ecr
         uses: aws-actions/amazon-ecr-login@v1
       - name: Build and push docker image 
         run: |
-         docker build -f ./app/Dockerfile -t $AWS_ECR_REPO:$IMAGE_TAG ./app  
+         docker build -f ./app/dockerfile -t $AWS_ECR_REPO:$IMAGE_TAG ./app  
          docker push $AWS_ECR_REPO:$IMAGE_TAG
