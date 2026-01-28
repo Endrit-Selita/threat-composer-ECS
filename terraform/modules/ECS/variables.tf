@@ -134,12 +134,12 @@ variable "ecs_sg_name" {
 
 variable "ecs_sg_ingress_from_port" {
   type    = number
-  default = 80
+  default = 8080
 }
 
 variable "ecs_sg_ingress_to_port" {
   type    = number
-  default = 80
+  default = 8080
 }
 
 variable "ecs_sg_ingress_protocol" {
