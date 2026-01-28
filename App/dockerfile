@@ -6,11 +6,29 @@ COPY . .
 RUN yarn build
 
 FROM node:20-alpine
-RUN adduser -S devops_1
 WORKDIR /app
 COPY --from=builder /app/build ./build
-RUN npm install -g serve && chown -R devops_1:devops_1 /app
-USER devops_1
+RUN yarn global add serve
+RUN addgroup -g 1000 appgroup && adduser -D -u 1000 -G appgroup appuser
+USER appuser
 ENV PORT=8080
 EXPOSE 8080
 CMD ["serve", "-s", "build", "-l", "8080"]
+
+#FROM node:20-alpine AS builder
+#WORKDIR /app
+#COPY package*.json yarn.lock ./
+#RUN yarn install --frozen-lockfile
+#COPY . .
+#RUN yarn build
+
+#FROM node:20-alpine
+#RUN addgroup -S ecsgroup && adduser -S devone -G ecsgroup
+#WORKDIR /app
+#COPY --from=build /app/build ./build
+#RUN chown -R devone:ecsgroup /app
+#RUN yarn global add serve
+#USER devone
+#ENV PORT=8080
+#EXPOSE 8080
+#CMD ["serve", "-s", "build", "-l", "8080"]

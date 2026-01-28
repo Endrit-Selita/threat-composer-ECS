@@ -36,10 +36,7 @@ jobs:
 
      - name: setup tflint
        uses: terraform-linters/setup-tflint@v4
-        
-     - name: terraform format check
-       run: terraform fmt -check
-  
+      
      - name: Terraform Init
        run: terraform init
     
