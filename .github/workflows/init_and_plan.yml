@@ -32,10 +32,6 @@ jobs:
 
      - name: Hashicorp - Terraform setup
        uses: hashicorp/setup-terraform@v3.1.2      
-
-
-     - name: setup tflint
-       uses: terraform-linters/setup-tflint@v4
       
      - name: Terraform Init
        run: terraform init
