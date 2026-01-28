@@ -44,17 +44,17 @@ module "alb" {
   alb_egress_ip_protocol             = var.alb_egress_ip_protocol
 }
 
-module "backend" {
-  source = "./modules/Backend"
+# module "backend" {
+#   source = "./modules/Backend"
 
-  aws_s3_bucket_name                = var.aws_s3_bucket_name
-  aws_dynamodb_table_name           = var.aws_dynamodb_table_name
-  aws_dynamodb_table_hash_key       = var.aws_dynamodb_table_hash_key
-  aws_dynamodb_table_read_capacity  = var.aws_dynamodb_table_read_capacity
-  aws_dynamodb_table_write_capacity = var.aws_dynamodb_table_write_capacity
-  aws_dynamodb_table_attribute_name = var.aws_dynamodb_table_attribute_name
-  aws_dynamodb_table_attribute_type = var.aws_dynamodb_table_attribute_type
-}
+#   aws_s3_bucket_name                = var.aws_s3_bucket_name
+#   aws_dynamodb_table_name           = var.aws_dynamodb_table_name
+#   aws_dynamodb_table_hash_key       = var.aws_dynamodb_table_hash_key
+#   aws_dynamodb_table_read_capacity  = var.aws_dynamodb_table_read_capacity
+#   aws_dynamodb_table_write_capacity = var.aws_dynamodb_table_write_capacity
+#   aws_dynamodb_table_attribute_name = var.aws_dynamodb_table_attribute_name
+#   aws_dynamodb_table_attribute_type = var.aws_dynamodb_table_attribute_type
+# }
 
 module "ecs" {
   source = "./modules/ECS"
@@ -68,7 +68,6 @@ module "ecs" {
   principals_type        = var.principals_type
   principals_identifiers = var.principals_identifiers
   ecs_iam_role_name      = var.ecs_iam_role_name
-  # ecs_iam_role_assume_role_policy= var.ecs_iam_role_assume_role_policy
   ecs_exec_attach_policy_arn           = var.ecs_exec_attach_policy_arn
   ecs_service_family                   = var.ecs_service_family
   ecs_service_requires_compatibilities = var.ecs_service_requires_compatibilities
@@ -96,13 +95,7 @@ module "ecs" {
   target_group_arn                     = module.alb.target_group_arn
   vpc_id_ecs_sg                        = module.vpc.vpc-ecs_id
   ecs_ingress_security_groups          = module.alb.alb_security_group_id
-  ecr_image_uri                        = var.ecr_image_uri
-  ##ECR##
-
-#  aws_ecr_repository_name                 = var.aws_ecr_repository_name
- # aws_ecr_repository_image_tag_mutability = var.aws_ecr_repository_image_tag_mutability
-  #ecr_scan_on_push                        = var.ecr_scan_on_push
-  
+  ecr_image_uri                        = var.ecr_image_uri  
 }
 
 module "route53" {
