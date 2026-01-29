@@ -1,10 +1,5 @@
-# AWS Threat Composer App - Deployment with ECS, Fargate, Terraform and GitHub Actions
+## AWS Threat Composer App - Deployment with with:
 
---- 
-
-This project deploys **Threat-Composer**, an open-source application by Amazon. 
-
----
   <p>
     <a href="#"><img src="https://img.shields.io/badge/Cloud-AWS-FF9900?logo=amazon-aws" alt="AWS | ECS Fargate"></a>
     <a href="#"><img src="https://img.shields.io/badge/IaC-Terraform-623CE4?logo=terraform" alt="Terraform"></a>
@@ -12,6 +7,7 @@ This project deploys **Threat-Composer**, an open-source application by Amazon.
     <a href="#"><img src="https://img.shields.io/badge/CI/CD-GitHub_Actions-2088FF?logo=github-actions" alt="CI/CD"></a>
   </p>
 </div>
+
 ---
 
 ## Architecture diagram
