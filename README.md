@@ -1,5 +1,4 @@
-# AWS Threat Composer App
-## Deployment with with: 
+## AWS Threat Composer App Deployment with with: 
 <p>
     <a href="#"><img src="https://img.shields.io/badge/Cloud-AWS-FF9900?logo=amazon-aws" alt="AWS | ECS Fargate"></a>
     <a href="#"><img src="https://img.shields.io/badge/IaC-Terraform-623CE4?logo=terraform" alt="Terraform"></a>
