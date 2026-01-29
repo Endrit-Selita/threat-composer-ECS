@@ -9,6 +9,18 @@
 
 ---
 
+<div align="center">
+  <img 
+    src="images/threat-composer.png" 
+    alt="AWS Threat Composer Logo" 
+    width="100" 
+    height="100"
+  />
+  <h1 style="font-size: 3.5em;">AWS Threat Composer on ECS Fargate</h1>
+  <p>Containerised • Terraform • GitHub Actions • HTTPS</p>
+</div>
+
+---
 ## Architecture diagram
 
 <img width="1007" height="874" alt="image" src="https://github.com/user-attachments/assets/09442ca7-d423-4522-9413-326af921a510" />
