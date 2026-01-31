@@ -21,6 +21,6 @@
   <img 
     src="images/Blank diagram.png" 
     alt="AWS Threat Composer Logo" 
-    width="200" 
-    height="200"
+    width="700" 
+    height="700"
   />
