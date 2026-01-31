@@ -19,8 +19,8 @@
 
 <div align="center">
   <img 
-    src="images/tca logo.svg" 
+    src="images/Blank diagram.png" 
     alt="AWS Threat Composer Logo" 
-    width="130" 
-    height="130"
+    width="200" 
+    height="200"
   />
