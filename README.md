@@ -29,7 +29,58 @@ This project exhibits the deployment of AWS Threat Composer to ECS Fargate using
     height="1000"
   />
   </div>
-  
+
+## Project Structure
+
+```
+├── .github/
+│   └── workflows/
+│       ├── apply.yml
+│       ├── destroy.yml
+│       ├── docker_build_push.yml
+│       └── init_and_plan.yml
+├── App/
+│   ├── dockerfile
+│   └──.dockerignore
+├── images/
+├── terraform/
+│   ├── modules/
+│   │   ├── ACM/
+│   │   │   ├── main.tf
+│   │   │   ├── outputs.tf
+│   │   │   └── variables.tf
+│   │   ├── ALB/
+│   │   │   ├── main.tf
+│   │   │   ├── outputs.tf
+│   │   │   └── variables.tf
+│   │   ├── Backend/
+│   │   │   ├── main.tf
+│   │   │   ├── outputs.tf
+│   │   │   └── variables.tf
+│   │   ├── ECS/
+│   │   │   ├── main.tf
+│   │   │   ├── outputs.tf
+│   │   │   └── variables.tf
+│   │   ├── Route 53/
+│   │   │  ├── main.tf
+│   │   │  ├── outputs.tf
+│   │   │  └── variables.tf
+│   │   └── VPC/
+│   │       ├── main.tf
+│   │       ├── outputs.tf
+│   │       └── variables.tf
+│   ├── main.tf
+│   ├── outputs.tf
+│   ├── providers.tf
+│   ├── terraform.tfvars
+│   └── variables.tf
+├── .gitignore
+└── README.md
+```
+
+---
+
+
 
 ## Key Features
 ### 1. Docker Image Build
@@ -49,27 +100,27 @@ The app runs on AWS Fargate with ECS managing task lifecycle and deployments whi
 ### 4. Domain Management (Route 53 & ACM)
 Route 53 takes your custom domain name (tm.tahirbajramselita.co.uk) and points it to your load balancer, so visitors can type a readable web address instead of the load balancer's URL, whilst ACM provides an SSL certificate ensuring security.
 
-### 5. CI/CD
-#### Continuous Integration (CI) - Docker Image
+## CI/CD Workflow 
+### Continuous Integration (CI) - Docker Image
 - Checkout code
 - Configure AWS credentials using OIDC and login to AWS ECR
 - Build, tag and push Docker image to ECR with main tag
 
-#### Continuous Integration (CI) - Terraform Plan
+### Continuous Integration (CI) - Terraform Plan
 - Checkout code
 - Configure AWS credentials using OIDC
 = Initialise Terraform and validate configuration
 - Generate Terraform plan to preview infrastructure changes
 
-#### Continuous Delivery (CD) - Terraform Apply
+### Continuous Delivery (CD) - Terraform Apply
 - Checkout code
 - Configure AWS credentials using OIDC
 - Apply Terraform changes (terraform apply -auto-approve) to deploy/update AWS infrastructure
 
-#### Continuous Delivery (CD) - Terraform Destroy
+### Continuous Delivery (CD) - Terraform Destroy
 - Checkout code.
 - Configure AWS credentials using OIDC.
 - Destroy infrastructure (terraform destroy -auto-approve) to tear down all AWS resources.
 
-#### Key Security Feature: OIDC Authentication
+### Key Security Feature: OIDC Authentication
 All workflows use GitHub's OIDC token exchange to assume AWS roles, eliminating the need for long lived API credentials stored as secrets.
