@@ -17,4 +17,10 @@
 ---
 ## Architecture diagram
 
-<img width="1007" height="874" alt="image" src="https://github.com/user-attachments/assets/09442ca7-d423-4522-9413-326af921a510" />
+<div align="center">
+  <img 
+    src="images/tca logo.svg" 
+    alt="AWS Threat Composer Logo" 
+    width="130" 
+    height="130"
+  />
