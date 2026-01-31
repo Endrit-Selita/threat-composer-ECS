@@ -84,10 +84,10 @@ This project exhibits the deployment of AWS Threat Composer to ECS Fargate using
 
 <div align="center">
   <img 
-    src="images/WEB.png" 
+    src="images/WEBSITE.png" 
     alt="AWS Threat Composer Logo" 
-    width="1000" 
-    height="1000"
+    width="850" 
+    height="850"
   />
   </div>
 
@@ -95,8 +95,8 @@ This project exhibits the deployment of AWS Threat Composer to ECS Fargate using
   <img 
     src="images/ACM.png" 
     alt="AWS Threat Composer Logo" 
-    width="1000" 
-    height="1000"
+    width="850" 
+    height="850"
   />
   </div>
 
@@ -120,6 +120,8 @@ The app runs on AWS Fargate with ECS managing task lifecycle and deployments whi
 
 ### 4. Domain Management (Route 53 & ACM)
 Route 53 takes your custom domain name (tm.tahirbajramselita.co.uk) and points it to your load balancer, so visitors can type a readable web address instead of the load balancer's URL, whilst ACM provides an SSL certificate ensuring security.
+
+---
 
 ## CI/CD Workflow 
 ### Continuous Integration (CI) - Docker Image
