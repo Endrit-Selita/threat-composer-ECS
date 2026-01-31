@@ -80,7 +80,19 @@ This project exhibits the deployment of AWS Threat Composer to ECS Fargate using
 
 ---
 
+## Final Product and SSL/TLS certificate - tm.tahirbajramselita.co.uk
 
+<div align="center">
+  <img 
+    src="images/Blank diagram.png" 
+    alt="AWS Threat Composer Logo" 
+    width="1000" 
+    height="1000"
+  />
+  </div>
+
+
+---
 
 ## Key Features
 ### 1. Docker Image Build
@@ -106,21 +118,57 @@ Route 53 takes your custom domain name (tm.tahirbajramselita.co.uk) and points i
 - Configure AWS credentials using OIDC and login to AWS ECR
 - Build, tag and push Docker image to ECR with main tag
 
+<div align="left">
+  <img 
+    src="images/cicddockerbuild.png" 
+    alt="AWS Threat Composer Logo" 
+    width="500" 
+    height="500"
+  />
+  </div>
+  
 ### Continuous Integration (CI) - Terraform Plan
 - Checkout code
 - Configure AWS credentials using OIDC
 = Initialise Terraform and validate configuration
 - Generate Terraform plan to preview infrastructure changes
 
+<div align="left">
+  <img 
+    src="images/cicdinitplan.png" 
+    alt="AWS Threat Composer Logo" 
+    width="500" 
+    height="500"
+  />
+  </div>
+  
 ### Continuous Delivery (CD) - Terraform Apply
 - Checkout code
 - Configure AWS credentials using OIDC
 - Apply Terraform changes (terraform apply -auto-approve) to deploy/update AWS infrastructure
 
+<div align="left">
+  <img 
+    src="images/cicdinitapply.png" 
+    alt="AWS Threat Composer Logo" 
+    width="500" 
+    height="500"
+  />
+  </div>
+  
 ### Continuous Delivery (CD) - Terraform Destroy
 - Checkout code.
 - Configure AWS credentials using OIDC.
 - Destroy infrastructure (terraform destroy -auto-approve) to tear down all AWS resources.
 
+<div align="left">
+  <img 
+    src="images/cicddestroy.png" 
+    alt="AWS Threat Composer Logo" 
+    width="500" 
+    height="500"
+  />
+  </div>
+  
 ### Key Security Feature: OIDC Authentication
 All workflows use GitHub's OIDC token exchange to assume AWS roles, eliminating the need for long lived API credentials stored as secrets.
