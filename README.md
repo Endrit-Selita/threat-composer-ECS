@@ -114,7 +114,7 @@ All AWS resources are deployed using Terraform, ensuring Infrastructure as Code 
 - DNS records managed via Route 53
 - AWS Certificate Manager (ACM) providing SSL/TLS certificates for HTTPS encryption
 - NAT Gateways enabling private ECS tasks to reach external services with controlled outbound connectivity
-- 
+  
 ### 3. Container Orchestration (ECS on Fargate)
 The app runs on AWS Fargate with ECS managing task lifecycle and deployments whilst task definitions and IAM roles configure the container runtime and grant access to CloudWatch logging and ECR image retrieval.
 
