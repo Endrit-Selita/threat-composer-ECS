@@ -181,3 +181,23 @@ Route 53 takes your custom domain name (tm.tahirbajramselita.co.uk) and points i
   
 ### Key Security Feature: OIDC Authentication
 All workflows use GitHub's OIDC token exchange to assume AWS roles, eliminating the need for long lived API credentials stored as secrets.
+
+---
+
+## Local Setup
+
+Requirements: Docker
+
+'''
+#clone the repository
+git clone https://github.com/Endrit-Selita/threat-composer-ECS.git
+
+cd App
+
+# build the Docker image
+docker build -t threat-composer .
+
+# run the container
+docker run -p 8080:8080 threat-composer
+'''
+Once running, open http://localhost:8080
