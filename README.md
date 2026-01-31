@@ -121,13 +121,11 @@ The app runs on AWS Fargate with ECS managing task lifecycle and deployments whi
 ### 4. Domain Management (Route 53 & ACM)
 Route 53 takes your custom domain name (tm.tahirbajramselita.co.uk) and points it to your load balancer, so visitors can type a readable web address instead of the load balancer's URL, whilst ACM provides an SSL certificate ensuring security.
 
----
-
-## CI/CD Workflow 
+### 5. CI/CD Workflow 
 ### Continuous Integration (CI) - Docker Image
-- Checkout code
-- Configure AWS credentials using OIDC and login to AWS ECR
-- Build, tag and push Docker image to ECR with main tag
+ - Checkout code
+ - Configure AWS credentials using OIDC and login to AWS ECR
+ - Build, tag and push Docker image to ECR with main tag
 
 <div align="left">
   <img 
