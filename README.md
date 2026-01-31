@@ -84,7 +84,7 @@ This project exhibits the deployment of AWS Threat Composer to ECS Fargate using
 
 <div align="center">
   <img 
-    src="images/WEBSITE.png" 
+    src="images/4e785b7c7e364e77aa1b8164eabef9e5-ezgif.com-optimize.gif" 
     alt="AWS Threat Composer Logo" 
     width="850" 
     height="850"
