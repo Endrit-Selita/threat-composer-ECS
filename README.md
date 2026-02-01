@@ -188,16 +188,16 @@ All workflows use GitHub's OIDC token exchange to assume AWS roles, eliminating 
 
 Requirements: Docker
 
-'''
+```bash
 #clone the repository
 git clone https://github.com/Endrit-Selita/threat-composer-ECS.git
 
-cd App
+cd threat-composer-ECS/App
 
 # build the Docker image
 docker build -t threat-composer .
 
 # run the container
 docker run -p 8080:8080 threat-composer
-'''
+```
 Once running, open http://localhost:8080
