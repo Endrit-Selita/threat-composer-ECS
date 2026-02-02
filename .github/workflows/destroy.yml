@@ -35,7 +35,7 @@ jobs:
      - name: Terraform Init
        run: terraform init
     
-     - name: use tfavrs from secrets
+     - name: use tfvars from secrets
        run: |
          cat <<'STOP' > terraform.tfvars
          ${{ secrets.TFVARS }}
